@@ -14,22 +14,55 @@ import RTree.packge.Preconditions;
  */
 public interface Rectangle extends Geometry, HasGeometry {
 
-    float x1();
+    double[] mins();
 
-    float y1();
+    double[] maxes();
 
-    float x2();
+    double volume();
 
-    float y2();
+    double intersectionVolume(Rectangle r);
 
-    float area();
+    double surfaceArea();
 
     Rectangle add(Rectangle r);
 
-    boolean contains(double x, double y);
+    boolean contains(double... x);
 
-    float intersectionArea(Rectangle r);
+    default double min(int index) {
+        return mins()[index];
+    }
 
-    float perimeter();
+    default double max(int index) {
+        return maxes()[index];
+    }
 
+    public static Rectangle create(double[] mins, double[] maxes) {
+        return RectangleDouble.create(mins, maxes);
+    }
+
+    public static Rectangle createOrdered(double[] x, double[] y) {
+        Preconditions.checkArgument(x.length == y.length, "x and y must have same length");
+        double[] mins = new double[x.length];
+        double[] maxes = new double[y.length];
+        for (int i = 0; i < x.length; i++) {
+            mins[i] = Math.min(x[i], y[i]);
+            maxes[i] = Math.max(x[i], y[i]);
+        }
+        return create(mins, maxes);
+    }
+
+    // the first half of the values correspond to the minimum values of every
+    // ordinate and the next half of the values correspond to the maximum values of
+    // every ordinate
+    public static Rectangle create(double... values) {
+        Preconditions.checkArgument(values.length >= 4 && values.length % 2 == 0,
+                "must be at least 4 values passed and the number of values must be even");
+        double[] x = new double[values.length / 2];
+        double[] y = new double[x.length];
+        for (int i = 0; i < x.length; i++) {
+            x[i] = values[i];
+            y[i] = values[i + x.length];
+        }
+        return create(x, y);
+    }
 }
