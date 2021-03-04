@@ -5,22 +5,18 @@
  */
 package Test;
 
+import java.io.FileInputStream;
 import quadTree.*;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.Vector;
 
 // Please run this class as 
 public class build_QuadTree {
 
     //OldQuadTree quadTree;
     static QuadTree quadTree;
-    private static final String CACHE_NAME = "FileCache";
-    /**
-     * Heap size required to run this example.
-     */
-    public static final int MIN_MEMORY = 512 * 1024 * 1024;
+    Point point;
 
     public static void main(String[] args) throws IOException {
 
@@ -30,32 +26,36 @@ public class build_QuadTree {
     }
 
     private QuadTree loadQuadTree() throws IOException {
-        //quadTree = new OldQuadTree(25, 3, 0, 0, 0, 10000, 10000, null);
         quadTree = new QuadTree(new Rectangle(-180, -90, 180, 90), 1);
+        FileInputStream inputStream = null;
+        Scanner sc = null;
+        Vector<Point> sample = new Vector<>();
 
+        
         try {
-            Scanner s = new Scanner(new File("C:\\Users\\DELL\\Desktop\\University\\graduation project2\\t.txt"));
+            inputStream = new FileInputStream("C:\\Users\\DELL\\Desktop\\University\\graduation project2\\workers_Skewed_Distribution.txt");
+            sc = new Scanner(inputStream, "UTF-8");
 
-//Scanner s = new Scanner(new File("C:\\Users\\-\\Downloads\\objectCoordinates.txt"));
-            while (s.hasNextLine()) {
-                String line = s.nextLine();
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
                 String[] sections = line.split(";");
-                double longitude = Double.parseDouble(sections[1]);
-                double latitude = Double.parseDouble(sections[2]);
-                Point p = new Point();
-                p.set(longitude, latitude);
-                Point[] p1 = {p};
-
-                quadTree.packInRectangles(p1);
-
-                //quadTree.insert(quadTreeObject);
+                point = new Point(Double.parseDouble(sections[1]), Double.parseDouble(sections[2]));
+                sample.add(point);
             }
-            s.close();
+               
+                quadTree.packInRectangles(sample.toArray(new Point[sample.size()]));
 
-            //map.put(1, quadTree);
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            
+            if (sc.ioException() != null) {
+                throw sc.ioException();
+            }
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            if (sc != null) {
+                sc.close();
+            }
         }
 
         return quadTree;
