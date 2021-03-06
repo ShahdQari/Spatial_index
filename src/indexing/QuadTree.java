@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package quadTree;
-
+package indexing;
+import core.Rectangle;
+import core.Point;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -107,7 +108,7 @@ public class QuadTree {
             //System.out.println(node.spaceMbr.toString());
             result.add(node.spaceMbr);
 
-            writer.write(toWKT(node.spaceMbr) + "\t" + node.elements.size() + "\n");
+            writer.write(toWKT(node.spaceMbr) + "\t" + node.elements.size() +"\n");
 
             //"\t"+node.elements.size()
         } else {
@@ -138,7 +139,7 @@ public class QuadTree {
         }
         result = new ArrayList<Rectangle>();
         writer = new OutputStreamWriter(
-                new FileOutputStream("C:\\Users\\DELL\\Desktop\\University\\graduation project2\\quad.WKT", false), "UTF-8");
+                new FileOutputStream("C:\\Users\\DELL\\Desktop\\University\\graduation project2\\task_Uniform_Distribution_QuadTree.WKT", false), "UTF-8");
         writer.write("MBR\n");
         printLeafNodes(this);
         writer.close();

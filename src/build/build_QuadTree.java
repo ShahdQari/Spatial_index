@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Test;
+package build;
 
+import core.Point;
+import core.Rectangle;
 import java.io.FileInputStream;
-import quadTree.*;
+import indexing.QuadTree;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.Vector;
@@ -31,21 +33,19 @@ public class build_QuadTree {
         Scanner sc = null;
         Vector<Point> sample = new Vector<>();
 
-        
         try {
-            inputStream = new FileInputStream("C:\\Users\\DELL\\Desktop\\University\\graduation project2\\workers_Skewed_Distribution.txt");
+            inputStream = new FileInputStream("C:\\Users\\DELL\\Desktop\\University\\graduation project2\\task_Uniform_Distribution.txt");
             sc = new Scanner(inputStream, "UTF-8");
 
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
                 String[] sections = line.split(";");
-                point = new Point(Double.parseDouble(sections[1]), Double.parseDouble(sections[2]));
+                point = new Point(Double.parseDouble(sections[0]), Double.parseDouble(sections[1]));
                 sample.add(point);
             }
-               
-                quadTree.packInRectangles(sample.toArray(new Point[sample.size()]));
 
-            
+            quadTree.packInRectangles(sample.toArray(new Point[sample.size()]));
+
             if (sc.ioException() != null) {
                 throw sc.ioException();
             }

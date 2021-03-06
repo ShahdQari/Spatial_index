@@ -3,22 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package quadTree;
+package core;
 
 /**
  *
  * @author DELL
  */
 
-import java.io.Serializable;
-
-public class Point implements Serializable,Comparable<Point>{
+public class Point implements Shape, Comparable<Point> {
 	public double x;
 	public double y;
-	public String date;
-	public int value; 
 
-	public Point () {
+	public Point() {
 		this(0, 0);
 	}
 	
@@ -31,7 +27,7 @@ public class Point implements Serializable,Comparable<Point>{
 	 * A copy constructor from any shape of type Point (or subclass of Point)
 	 * @param s
 	 */
-	public Point (Point s) {
+	public Point(Point s) {
 	  this.x = s.x;
 	  this.y = s.y;
   }
@@ -42,11 +38,38 @@ public class Point implements Serializable,Comparable<Point>{
 	}
 
 	
+
+	public int compareTo(Shape s) {
+	  Point pt2 = (Point) s;
+
+	  // Sort by id
+	  double difference = this.x - pt2.x;
+		if (difference == 0) {
+			difference = this.y - pt2.y;
+		}
+		if (difference == 0)
+		  return 0;
+		return difference > 0 ? 1 : -1;
+	}
+	
 	public boolean equals(Object obj) {
+		if (obj == null) 
+			return false;
 		Point r2 = (Point) obj;
 		return this.x == r2.x && this.y == r2.y;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(this.x);
+		result = (int) (temp ^ temp >>> 32);
+		temp = Double.doubleToLongBits(this.y);
+		result = 31 * result + (int) (temp ^ temp >>> 32);
+		return result;
+	}
+
 	public double distanceTo(Point s) {
 		double dx = s.x - this.x;
 		double dy = s.y - this.y;
@@ -68,21 +91,24 @@ public class Point implements Serializable,Comparable<Point>{
 	 * following statement should return true.
 	 * <code>p.getMBR().isIntersected(p);</code>
 	 */
-  
+  @Override
   public Rectangle getMBR() {
     return new Rectangle(x, y, x + Math.ulp(x), y + Math.ulp(y));
   }
 
-  
+  @Override
   public double distanceTo(double px, double py) {
     double dx = x - px;
     double dy = y - py;
     return Math.sqrt(dx * dx + dy * dy);
   }
 
+  public Shape getIntersection(Shape s) {
+    return getMBR().getIntersection(s);
+  }
 
-
-  public boolean isIntersected(Rectangle s) {
+  @Override
+  public boolean isIntersected(Shape s) {
     return getMBR().isIntersected(s);
   }
   
@@ -90,10 +116,9 @@ public class Point implements Serializable,Comparable<Point>{
   public String toString() {
     return "Point: ("+x+","+y+")";
   }
-  
 
   @Override
-  public int compareTo(Point  o) {
+  public int compareTo(Point o) {
     if (x < o.x)
       return -1;
     if (x > o.x)
@@ -105,5 +130,6 @@ public class Point implements Serializable,Comparable<Point>{
     return 0;
   }
 
- 
+
+
 }
